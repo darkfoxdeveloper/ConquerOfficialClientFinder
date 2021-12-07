@@ -40,6 +40,9 @@ namespace ConquerOfficialClientFinder
             this.downloadWorker = new System.ComponentModel.BackgroundWorker();
             this.lblFrom = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lblTo = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.pboxAboutImage = new System.Windows.Forms.PictureBox();
+            this.rtboxAbout = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pboxAboutImage)).BeginInit();
             this.SuspendLayout();
             // 
             // btnFind
@@ -120,11 +123,34 @@ namespace ConquerOfficialClientFinder
             this.lblTo.TabIndex = 7;
             this.lblTo.Values.Text = "TO";
             // 
+            // pboxAboutImage
+            // 
+            this.pboxAboutImage.Image = global::ConquerOfficialClientFinder.Properties.Resources.foxlogo;
+            this.pboxAboutImage.Location = new System.Drawing.Point(897, 12);
+            this.pboxAboutImage.Name = "pboxAboutImage";
+            this.pboxAboutImage.Size = new System.Drawing.Size(340, 345);
+            this.pboxAboutImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pboxAboutImage.TabIndex = 8;
+            this.pboxAboutImage.TabStop = false;
+            // 
+            // rtboxAbout
+            // 
+            this.rtboxAbout.InputControlStyle = ComponentFactory.Krypton.Toolkit.InputControlStyle.Ribbon;
+            this.rtboxAbout.Location = new System.Drawing.Point(897, 368);
+            this.rtboxAbout.Name = "rtboxAbout";
+            this.rtboxAbout.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.rtboxAbout.Size = new System.Drawing.Size(340, 121);
+            this.rtboxAbout.TabIndex = 9;
+            this.rtboxAbout.Text = "Created with Love for DaRkFoxDeveloper.\nWebsite: www.darkfoxdeveloper.com";
+            this.rtboxAbout.WordWrap = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(903, 497);
+            this.ClientSize = new System.Drawing.Size(1249, 497);
+            this.Controls.Add(this.rtboxAbout);
+            this.Controls.Add(this.pboxAboutImage);
             this.Controls.Add(this.lblTo);
             this.Controls.Add(this.lblFrom);
             this.Controls.Add(this.btnDownload);
@@ -136,6 +162,7 @@ namespace ConquerOfficialClientFinder
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "ConquerOfficialClientFinder";
+            ((System.ComponentModel.ISupportInitialize)(this.pboxAboutImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -153,6 +180,8 @@ namespace ConquerOfficialClientFinder
         private System.ComponentModel.BackgroundWorker downloadWorker;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lblFrom;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lblTo;
+        private System.Windows.Forms.PictureBox pboxAboutImage;
+        private ComponentFactory.Krypton.Toolkit.KryptonRichTextBox rtboxAbout;
     }
 }
 
