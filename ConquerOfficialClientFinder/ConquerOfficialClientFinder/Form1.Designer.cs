@@ -42,6 +42,7 @@ namespace ConquerOfficialClientFinder
             this.lblTo = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.pboxAboutImage = new System.Windows.Forms.PictureBox();
             this.rtboxAbout = new ComponentFactory.Krypton.Toolkit.KryptonRichTextBox();
+            this.btnFindPatches = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.pboxAboutImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,7 +50,7 @@ namespace ConquerOfficialClientFinder
             // 
             this.btnFind.Location = new System.Drawing.Point(201, 416);
             this.btnFind.Name = "btnFind";
-            this.btnFind.Size = new System.Drawing.Size(354, 73);
+            this.btnFind.Size = new System.Drawing.Size(346, 43);
             this.btnFind.TabIndex = 0;
             this.btnFind.Values.Text = "Find Clients";
             this.btnFind.Click += new System.EventHandler(this.BtnFind_Click);
@@ -64,7 +65,7 @@ namespace ConquerOfficialClientFinder
             // 
             // tbxLimitVersion
             // 
-            this.tbxLimitVersion.Location = new System.Drawing.Point(81, 457);
+            this.tbxLimitVersion.Location = new System.Drawing.Point(81, 465);
             this.tbxLimitVersion.Name = "tbxLimitVersion";
             this.tbxLimitVersion.Size = new System.Drawing.Size(103, 32);
             this.tbxLimitVersion.TabIndex = 2;
@@ -73,7 +74,7 @@ namespace ConquerOfficialClientFinder
             // 
             // tbxStartVersion
             // 
-            this.tbxStartVersion.Location = new System.Drawing.Point(81, 416);
+            this.tbxStartVersion.Location = new System.Drawing.Point(81, 427);
             this.tbxStartVersion.Name = "tbxStartVersion";
             this.tbxStartVersion.Size = new System.Drawing.Size(103, 32);
             this.tbxStartVersion.TabIndex = 3;
@@ -95,11 +96,11 @@ namespace ConquerOfficialClientFinder
             // btnDownload
             // 
             this.btnDownload.Enabled = false;
-            this.btnDownload.Location = new System.Drawing.Point(561, 416);
+            this.btnDownload.Location = new System.Drawing.Point(553, 416);
             this.btnDownload.Name = "btnDownload";
-            this.btnDownload.Size = new System.Drawing.Size(330, 73);
+            this.btnDownload.Size = new System.Drawing.Size(338, 92);
             this.btnDownload.TabIndex = 5;
-            this.btnDownload.Values.Text = "Download Selected Client";
+            this.btnDownload.Values.Text = "Download Selected";
             this.btnDownload.Click += new System.EventHandler(this.BtnDownload_Click);
             // 
             // downloadWorker
@@ -109,7 +110,7 @@ namespace ConquerOfficialClientFinder
             // 
             // lblFrom
             // 
-            this.lblFrom.Location = new System.Drawing.Point(12, 419);
+            this.lblFrom.Location = new System.Drawing.Point(12, 430);
             this.lblFrom.Name = "lblFrom";
             this.lblFrom.Size = new System.Drawing.Size(63, 29);
             this.lblFrom.TabIndex = 6;
@@ -117,7 +118,7 @@ namespace ConquerOfficialClientFinder
             // 
             // lblTo
             // 
-            this.lblTo.Location = new System.Drawing.Point(39, 460);
+            this.lblTo.Location = new System.Drawing.Point(39, 468);
             this.lblTo.Name = "lblTo";
             this.lblTo.Size = new System.Drawing.Size(36, 29);
             this.lblTo.TabIndex = 7;
@@ -139,16 +140,26 @@ namespace ConquerOfficialClientFinder
             this.rtboxAbout.Location = new System.Drawing.Point(897, 368);
             this.rtboxAbout.Name = "rtboxAbout";
             this.rtboxAbout.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.rtboxAbout.Size = new System.Drawing.Size(340, 121);
+            this.rtboxAbout.Size = new System.Drawing.Size(340, 140);
             this.rtboxAbout.TabIndex = 9;
             this.rtboxAbout.Text = "Created with Love for DaRkFoxDeveloper.\nWebsite: www.darkfoxdeveloper.com";
             this.rtboxAbout.WordWrap = false;
+            // 
+            // btnFindPatches
+            // 
+            this.btnFindPatches.Location = new System.Drawing.Point(201, 465);
+            this.btnFindPatches.Name = "btnFindPatches";
+            this.btnFindPatches.Size = new System.Drawing.Size(346, 43);
+            this.btnFindPatches.TabIndex = 10;
+            this.btnFindPatches.Values.Text = "Find Patches";
+            this.btnFindPatches.Click += new System.EventHandler(this.BtnFindPatches_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1249, 497);
+            this.ClientSize = new System.Drawing.Size(1249, 516);
+            this.Controls.Add(this.btnFindPatches);
             this.Controls.Add(this.rtboxAbout);
             this.Controls.Add(this.pboxAboutImage);
             this.Controls.Add(this.lblTo);
@@ -182,6 +193,7 @@ namespace ConquerOfficialClientFinder
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lblTo;
         private System.Windows.Forms.PictureBox pboxAboutImage;
         private ComponentFactory.Krypton.Toolkit.KryptonRichTextBox rtboxAbout;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnFindPatches;
     }
 }
 

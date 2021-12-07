@@ -11,6 +11,8 @@ namespace ConquerOfficialClientFinder
     public partial class Form1 : Form
     {
         private uint VersionCounter = 0;
+        private bool FindClientsActived = false;
+        private bool FindPatchesActived = false;
         public Form1()
         {
             InitializeComponent();
@@ -18,7 +20,10 @@ namespace ConquerOfficialClientFinder
 
         private void BtnFind_Click(object sender, EventArgs e)
         {
+            FindClientsActived = true;
+            FindPatchesActived = false;
             worker.RunWorkerAsync();
+            btnFindPatches.Enabled = false;
             (sender as Control).Enabled = false;
             btnDownload.Enabled = true;
         }
@@ -52,7 +57,43 @@ namespace ConquerOfficialClientFinder
                 {
                     canExit = true;
                     this.Invoke(new MethodInvoker(delegate {
-                        Text = $"ConquerOfficialClientFinder - Found: " + lstBoxClients.Items.Count;
+                        Text = $"ConquerOfficialClientFinder - Found: " + lstBoxClients.Items.Count + " Clients";
+                    }));
+                }
+                VersionCounter++;
+            }
+        }
+
+        private void FindPatches()
+        {
+            this.Invoke(new MethodInvoker(delegate {
+                lstBoxClients.Items.Clear();
+                Text = $"ConquerOfficialClientFinder - Searching Patches...";
+            }));
+            uint FirstVersion = uint.Parse(tbxStartVersion.Text);
+            VersionCounter = FirstVersion;
+            uint LimitVersion = uint.Parse(tbxLimitVersion.Text);
+            bool canExit = false;
+
+            while (!canExit)
+            {
+                bool ValidDownload = ExistClientFile(VersionCounter);
+                this.Invoke(new MethodInvoker(delegate {
+                    Text = $"ConquerOfficialClientFinder - Searching patches (V{VersionCounter}/V{LimitVersion})";
+                }));
+
+                if (ValidDownload)
+                {
+                    this.Invoke(new MethodInvoker(delegate {
+                        lstBoxClients.Items.Add("http://copatch.99.com/enzf/enco_" + VersionCounter + ".exe");
+                    }));
+                }
+
+                if (VersionCounter > LimitVersion)
+                {
+                    canExit = true;
+                    this.Invoke(new MethodInvoker(delegate {
+                        Text = $"ConquerOfficialClientFinder - Found: " + lstBoxClients.Items.Count + " Patches";
                     }));
                 }
                 VersionCounter++;
@@ -87,9 +128,23 @@ namespace ConquerOfficialClientFinder
             return ValidDownload;
         }
 
+        public bool ExistPatchFile(uint VersionForSearch)
+        {
+            string searchUrl = $"http://copatch.99.com/enzf/enco_" + VersionForSearch + ".exe";
+            bool ValidDownload = RemoteFileExists(searchUrl);
+            return ValidDownload;
+        }
+
         private void Worker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            FindClients();
+            if (FindClientsActived)
+            {
+                FindClients();
+            }
+            if (FindPatchesActived)
+            {
+                FindPatches();
+            }
         }
 
         private void BtnDownload_Click(object sender, EventArgs e)
@@ -142,6 +197,16 @@ namespace ConquerOfficialClientFinder
 
         private void LstBoxClients_SelectedIndexChanged(object sender, EventArgs e)
         {
+            btnDownload.Enabled = true;
+        }
+
+        private void BtnFindPatches_Click(object sender, EventArgs e)
+        {
+            FindClientsActived = false;
+            FindPatchesActived = true;
+            worker.RunWorkerAsync();
+            btnFind.Enabled = false;
+            (sender as Control).Enabled = false;
             btnDownload.Enabled = true;
         }
     }
