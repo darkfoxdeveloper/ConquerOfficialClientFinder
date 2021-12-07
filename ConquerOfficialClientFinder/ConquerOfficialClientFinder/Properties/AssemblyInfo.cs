@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // conjunto de atributos. Cambie estos valores de atributo para modificar la información
 // asociada con un ensamblado.
 [assembly: AssemblyTitle("ConquerOfficialClientFinder")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Little Software for search Conquer Online Official clients in Oficial Sources of TQ")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("www.darkfoxdeveloper.com")]
 [assembly: AssemblyProduct("ConquerOfficialClientFinder")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCopyright("Copyright © DaRkFoxDeveloper 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
