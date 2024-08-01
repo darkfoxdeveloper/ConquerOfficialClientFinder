@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Net;
-using System.Windows.Forms;
-using System.Linq;
-using System.IO;
-using System.Threading;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace ConquerOfficialClientFinder
 {
@@ -13,6 +14,7 @@ namespace ConquerOfficialClientFinder
         private uint VersionCounter = 0;
         private bool FindClientsActived = false;
         private bool FindPatchesActived = false;
+        private List<COCFConfig> Configs = new List<COCFConfig>();
         public Form1()
         {
             InitializeComponent();
@@ -26,9 +28,10 @@ namespace ConquerOfficialClientFinder
             btnFindPatches.Enabled = false;
             (sender as Control).Enabled = false;
             btnDownload.Enabled = true;
+            btnStopSearching.Enabled = true;
         }
 
-        private void FindClients()
+        private void FindClients(DoWorkEventArgs workerEventArgs)
         {
             this.Invoke(new MethodInvoker(delegate {
                 lstBoxClients.Items.Clear();
@@ -41,6 +44,11 @@ namespace ConquerOfficialClientFinder
 
             while (!canExit)
             {
+                if (worker.CancellationPending)
+                {
+                    workerEventArgs.Cancel = true;
+                    canExit = true;
+                }
                 bool ValidDownload = ExistClientFile(VersionCounter);
                 this.Invoke(new MethodInvoker(delegate {
                     Text = $"ConquerOfficialClientFinder - Searching clients (V{VersionCounter}/V{LimitVersion})";
@@ -49,7 +57,7 @@ namespace ConquerOfficialClientFinder
                 if (ValidDownload)
                 {
                     this.Invoke(new MethodInvoker(delegate {
-                        lstBoxClients.Items.Add("http://conquer.download.99.com/en_zf/Conquer_v" + VersionCounter + ".exe");
+                        lstBoxClients.Items.Add(Configs.FirstOrDefault().ClientMirrorURI.Replace("#CO_VERSION#", VersionCounter.ToString()));
                     }));
                 }
 
@@ -64,7 +72,7 @@ namespace ConquerOfficialClientFinder
             }
         }
 
-        private void FindPatches()
+        private void FindPatches(DoWorkEventArgs workerEventArgs)
         {
             this.Invoke(new MethodInvoker(delegate {
                 lstBoxClients.Items.Clear();
@@ -77,7 +85,12 @@ namespace ConquerOfficialClientFinder
 
             while (!canExit)
             {
-                bool ValidDownload = ExistClientFile(VersionCounter);
+                if (worker.CancellationPending)
+                {
+                    workerEventArgs.Cancel = true;
+                    canExit = true;
+                }
+                bool ValidDownload = ExistPatchFile(VersionCounter);
                 this.Invoke(new MethodInvoker(delegate {
                     Text = $"ConquerOfficialClientFinder - Searching patches (V{VersionCounter}/V{LimitVersion})";
                 }));
@@ -85,7 +98,7 @@ namespace ConquerOfficialClientFinder
                 if (ValidDownload)
                 {
                     this.Invoke(new MethodInvoker(delegate {
-                        lstBoxClients.Items.Add("http://copatch.99.com/enzf/enco_" + VersionCounter + ".exe");
+                        lstBoxClients.Items.Add(Configs.FirstOrDefault().PatchMirrorURI.Replace("#CO_VERSION#", VersionCounter.ToString()));
                     }));
                 }
 
@@ -123,14 +136,14 @@ namespace ConquerOfficialClientFinder
 
         public bool ExistClientFile(uint VersionForSearch)
         {
-            string searchUrl = $"http://conquer.download.99.com/en_zf/Conquer_v" + VersionForSearch + ".exe";
+            string searchUrl = Configs.FirstOrDefault().ClientMirrorURI.Replace("#CO_VERSION#", VersionForSearch.ToString());
             bool ValidDownload = RemoteFileExists(searchUrl);
             return ValidDownload;
         }
 
         public bool ExistPatchFile(uint VersionForSearch)
         {
-            string searchUrl = $"http://copatch.99.com/enzf/enco_" + VersionForSearch + ".exe";
+            string searchUrl = Configs.FirstOrDefault().PatchMirrorURI.Replace("#CO_VERSION#", VersionForSearch.ToString());
             bool ValidDownload = RemoteFileExists(searchUrl);
             return ValidDownload;
         }
@@ -139,19 +152,35 @@ namespace ConquerOfficialClientFinder
         {
             if (FindClientsActived)
             {
-                FindClients();
+                FindClients(e);
             }
             if (FindPatchesActived)
             {
-                FindPatches();
+                FindPatches(e);
             }
+            this.Invoke(new MethodInvoker(delegate {
+                btnFind.Enabled = true;
+                btnFindPatches.Enabled = true;
+            }));
         }
 
         private void BtnDownload_Click(object sender, EventArgs e)
         {
-            pBarProgress.Value = 0;
-            pBarProgress.Visible = true;
-            downloadWorker.RunWorkerAsync();
+            if (!worker.IsBusy)
+            {
+                if (lstBoxClients.Items.Count > 0)
+                {
+                    pBarProgress.Value = 0;
+                    pBarProgress.Visible = true;
+                    downloadWorker.RunWorkerAsync();
+                } else
+                {
+                    MessageBox.Show("No items selected in list for download", "ConquerOfficialClientFinder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            } else
+            {
+                MessageBox.Show("Wait for finish search or force stop with the Button", "ConquerOfficialClientFinder", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void DownloadClientFile(string URI)
@@ -208,6 +237,40 @@ namespace ConquerOfficialClientFinder
             btnFind.Enabled = false;
             (sender as Control).Enabled = false;
             btnDownload.Enabled = true;
+            btnStopSearching.Enabled = true;
+        }
+
+        private void BtnStopSearching_Click(object sender, EventArgs e)
+        {
+            if (worker.IsBusy)
+            {
+                worker.CancelAsync();
+                btnDownload.Enabled = true;
+                btnStopSearching.Enabled = true;
+                btnFind.Enabled = true;
+                btnFindPatches.Enabled = true;
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (!File.Exists("COCLConfig.json"))
+            {
+                Configs = new List<COCFConfig>
+                {
+                    new COCFConfig() { ClientMirrorURI = "http://conquer.download.99.com/en_zf/Conquer_v#CO_VERSION#.exe", PatchMirrorURI = "http://copatch.99.com/enzf/enco_#CO_VERSION#.exe" }
+                };
+                File.WriteAllText("COCLConfig.json", Newtonsoft.Json.JsonConvert.SerializeObject(Configs));
+            }
+            Configs = Newtonsoft.Json.JsonConvert.DeserializeObject<List<COCFConfig>>(File.ReadAllText("COCLConfig.json"));
+            if (Configs.FirstOrDefault() != null)
+            {
+                rtboxAbout.Text += Environment.NewLine + $"Loaded mirror for clients: {Configs.FirstOrDefault().ClientMirrorURI.Replace("#CO_VERSION", "0000")}";
+                rtboxAbout.Text += Environment.NewLine + $"Loaded mirror for patches: {Configs.FirstOrDefault().PatchMirrorURI.Replace("#CO_VERSION", "0000")}";
+            } else
+            {
+                rtboxAbout.Text += Environment.NewLine + $"Invalid mirrors detected.";
+            }
         }
     }
 }
